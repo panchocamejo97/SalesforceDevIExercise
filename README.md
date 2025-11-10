@@ -113,23 +113,118 @@ update exp;
 
 
 ## ⚡ Step 3 — LWC: `expenseCreator`
+<targets>
+<target>lightning__RecordPage</target>
+<target>lightning__AppPage</target>
+<target>lightning__HomePage</target>
+</targets>
+</LightningComponentBundle>
+```
 
 
-Purpose: Allow users to enter and submit a new expense.
+✅ **Checklist:**
+- [ ] Data table displays expenses
+- [ ] Clicking “View” opens the record
 
 
-**Folder:** `force-app/main/default/lwc/expenseCreator`
+---
 
 
-### `expenseCreator.html`
+## 🧱 Step 5 — Lightning Page Customization
+
+
+1. Go to **Lightning App Builder → Expense__c Record Page**
+2. Add both components: `expenseCreator` and `expenseList`
+3. Configure dynamic visibility if desired (e.g., only standard users can see the creator form)
+4. Activate the page for your app
+
+
+✅ **Checklist:**
+- [ ] Page layout looks clean
+- [ ] Both LWCs functional
+
+
+---
+
+
+## 🧾 Step 6 — Visualforce Page (Optional)
+
+
+File: `ExpenseReportVF.page`
 ```html
-<template>
-<lightning-card title="New Expense" icon-name="custom:custom63">
-<div class="slds-p-around_small">
-<!-- TODO: Add inputs for Date, Amount, Category, Description -->
-<!-- Use lightning-input, lightning-combobox, and lightning-textarea -->
-</div>
+<apex:page standardController="Expense__c" recordSetVar="expenses">
+<h1>Expense Report</h1>
+<apex:pageBlock title="All Expenses">
+<apex:pageBlockTable value="{!expenses}" var="e">
+<!-- TODO: Add columns for Name, Amount, Category, Status -->
+</apex:pageBlockTable>
+</apex:pageBlock>
+<apex:commandButton value="Back to Lightning" action="/lightning/o/Expense__c/list"/>
+</apex:page>
+```
 
 
-<div class="slds-p-around_small slds-align_absolute-center">
+✅ **Checklist:**
+- [ ] Page deployed
+- [ ] Accessible via `/apex/ExpenseReportVF`
+
+
+---
+
+
+## 🧭 Step 7 — Custom Button or Quick Action
+
+
+- Create a **Quick Action** labeled **Approve Expense**
+- Action type: Flow or Apex
+- Logic: Sets `Status__c = 'Approved'`
+- Add to Expense__c page layout
+
+
+✅ **Checklist:**
+- [ ] Button visible and functional
+
+
+---
+
+
+## 🚀 Stretch Challenges
+
+
+1. Add filtering by Category in the Expense List.
+2. Add a Validation Rule so Amount__c must be greater than 0.
+3. Add a Flow to auto-approve expenses under $100.
+4. Add a Permission Set for managers.
+
+
+---
+
+
+## 🧩 Reflection Questions
+
+
+- What’s the difference between using @AuraEnabled(cacheable=true) and a regular Apex method?
+- Why is NavigationMixin useful in Lightning Web Components?
+- How could this app be extended to support file attachments or receipts?
+
+
+---
+
+
+## ✅ Deliverables Summary
+
+
+| Component | Purpose | Deliverable |
+|------------|----------|-------------|
+| Expense__c | Data Model | Object + Fields Created |
+| ExpenseController | Logic | Apex Class with Methods |
+| expenseCreator | UI | Form to Create Expense |
+| expenseList | UI | Datatable to Display Expenses |
+| ExpenseReportVF | Legacy UI | List of All Expenses |
+| Approve Button | Automation | Status Change Action |
+
+
+---
+
+
 🧡 *Good luck, have fun, and remember: clean, readable code > clever code.*
