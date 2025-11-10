@@ -111,8 +111,152 @@ update exp;
 
 ---
 
-
 ## ⚡ Step 3 — LWC: `expenseCreator`
+
+
+Purpose: Allow users to enter and submit a new expense.
+
+
+**Folder:** `force-app/main/default/lwc/expenseCreator`
+
+
+### `expenseCreator.html`
+```html
+<template>
+<lightning-card title="New Expense" icon-name="custom:custom63">
+<div class="slds-p-around_small">
+<!-- TODO: Add inputs for Date, Amount, Category, Description -->
+<!-- Use lightning-input, lightning-combobox, and lightning-textarea -->
+</div>
+
+
+<div class="slds-p-around_small slds-align_absolute-center">
+<!-- TODO: Add a lightning-button to save -->
+</div>
+</lightning-card>
+</template>
+```
+
+
+### `expenseCreator.js`
+```js
+import { LightningElement, track } from 'lwc';
+import createExpense from '@salesforce/apex/ExpenseController.createExpense';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+
+export default class ExpenseCreator extends LightningElement {
+@track date;
+@track amount;
+@track category;
+@track description;
+
+
+// TODO: Define category options (Travel, Meals, Office, Other)
+
+
+handleChange(event) {
+// TODO: Capture input field values dynamically
+}
+
+
+handleSave() {
+// TODO: Build expense object and call Apex method
+// On success: show toast and reset form
+// On error: show error toast
+}
+
+
+resetForm() {
+// TODO: Reset all fields
+}
+}
+```
+
+
+### `expenseCreator.js-meta.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+<apiVersion>60.0</apiVersion>
+<isExposed>true</isExposed>
+<targets>
+<target>lightning__RecordPage</target>
+<target>lightning__AppPage</target>
+<target>lightning__HomePage</target>
+</targets>
+</LightningComponentBundle>
+```
+
+
+✅ **Checklist:**
+- [ ] Component deployed
+- [ ] Expense creation works
+- [ ] Toast messages show correctly
+
+---
+
+
+## 📊 Step 4 — LWC: `expenseList`
+
+
+Purpose: Display a table of recent expenses.
+
+
+**Folder:** `force-app/main/default/lwc/expenseList`
+
+
+### `expenseList.html`
+```html
+<template>
+<lightning-card title="Recent Expenses" icon-name="custom:custom14">
+<template if:true={expenses}>
+<!-- TODO: Add lightning-datatable -->
+</template>
+
+
+<template if:true={error}>
+<div class="slds-text-color_error slds-p-around_small">{error}</div>
+</template>
+</lightning-card>
+</template>
+```
+
+
+### `expenseList.js`
+```js
+import { LightningElement, track, wire } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import getRecentExpenses from '@salesforce/apex/ExpenseController.getRecentExpenses';
+
+
+export default class ExpenseList extends NavigationMixin(LightningElement) {
+@track expenses;
+@track error;
+
+
+// TODO: Define columns (Name, Date, Amount, Category, Status, View button)
+
+
+@wire(getRecentExpenses)
+wiredExpenses({ data, error }) {
+// TODO: Assign data or handle error
+}
+
+
+handleRowAction(event) {
+// TODO: Implement navigation to record page
+}
+}
+```
+
+
+### `expenseList.js-meta.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+<apiVersion>60.0</apiVersion>
+<isExposed>true</isExposed>
 <targets>
 <target>lightning__RecordPage</target>
 <target>lightning__AppPage</target>
@@ -143,9 +287,7 @@ update exp;
 - [ ] Page layout looks clean
 - [ ] Both LWCs functional
 
-
 ---
-
 
 ## 🧾 Step 6 — Visualforce Page (Optional)
 
@@ -168,9 +310,7 @@ File: `ExpenseReportVF.page`
 - [ ] Page deployed
 - [ ] Accessible via `/apex/ExpenseReportVF`
 
-
 ---
-
 
 ## 🧭 Step 7 — Custom Button or Quick Action
 
@@ -195,7 +335,6 @@ File: `ExpenseReportVF.page`
 2. Add a Validation Rule so Amount__c must be greater than 0.
 3. Add a Flow to auto-approve expenses under $100.
 4. Add a Permission Set for managers.
-
 
 ---
 
@@ -222,9 +361,3 @@ File: `ExpenseReportVF.page`
 | expenseList | UI | Datatable to Display Expenses |
 | ExpenseReportVF | Legacy UI | List of All Expenses |
 | Approve Button | Automation | Status Change Action |
-
-
----
-
-
-🧡 *Good luck, have fun, and remember: clean, readable code > clever code.*
